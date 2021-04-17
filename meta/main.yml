@@ -1,0 +1,26 @@
+---
+galaxy_info:
+  author: stephenogg based on cloudalchemy
+  role_name: promtail
+  description: promtail service to push logs to loki
+  license: BSD
+  company: none
+  min_ansible_version: 2.7
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - xenial
+        - focal
+
+  galaxy_tags:
+  - promtail
+  - monitoring
+  - loki
+  - metrics
+  - alerts
+  - alerting
+  - molecule
+  - cloud
+
+dependencies: []

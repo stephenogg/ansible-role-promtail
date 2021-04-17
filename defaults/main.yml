@@ -1,0 +1,6 @@
+---
+
+promtail_version: 2.2.1
+promtail_config_dir: /etc/promtail
+promtail_config_file: files/promtail-config.yml
+loki_url: http://example.com
