@@ -1,50 +1,52 @@
 ---
-- name: Assert usage of systemd as an init system
+- name: promtail | assert usage of systemd as an init system
   assert:
     that: ansible_service_mgr == 'systemd'
     msg: "This module only works with systemd"
 
-- name: Get systemd version
+- name: promtail | get systemd version
   command: systemctl --version
   changed_when: false
   check_mode: false
   register: __systemd_version
 
-- name: Set systemd version fact
+- name: promtail | set systemd version fact
   set_fact:
     promtail_systemd_version: "{{ __systemd_version.stdout_lines[0].split(' ')[-1] }}"
     
-- name: create promatail system group
+- name: promtail | create promtail system group
   group:
-    name: promatail
+    name: promtail
     system: true
     state: present
 
-- name: create proamtail system user
+- name: promtail | create promtail system user
   user:
-    name: promatail
+    name: promtail
     system: true
     shell: "/usr/sbin/nologin"
     group: promtail
-    groups: adm
+    #adm can read syslog, nginx logs, postgres logs
+    #systemd-journal can read journal 
+    groups: adm, systemd-journal
     append: true
     createhome: false
     
-- name: create promtail configuration directory
+- name: promtail | create promtail configuration directory
   file:
-    path: "{{promtail_config_dir}}"
+    path: "{{ promtail_config_dir }}"
     state: directory
     owner: root
     group: promtail
     mode: 0770
     
 - block:
-    - name: "Get checksum list"
+    - name: promtail | get checksum list
       set_fact:
         __promtail_checksums: "{{ lookup('url', 'https://github.com/grafana/loki/releases/download/v' + promtail_version + '/SHA256SUMS', wantlist=True) | list }}"
       run_once: true
 
-    - name: "Get checksum for {{ go_arch }} architecture"
+    - name: "promtail | get checksum for {{ go_arch }} architecture"
       set_fact:
         __promtail_checksum: "{{ item.split(' ')[0] }}"
       with_items: "{{ __promtail_checksums }}"
@@ -53,7 +55,7 @@
   delegate_to: localhost
 
 - block:
-    - name: download promtail binary to local folder
+    - name: promtail | download promtail binary to local folder
       become: false
       get_url:
         url: "https://github.com/grafana/loki/releases/download/v{{ promtail_version }}/promtail-linux-{{ go_arch }}.zip"
@@ -67,7 +69,7 @@
       delegate_to: localhost
       check_mode: false
       
-    - name: unpack promtail binary
+    - name: promtail | unpack promtail binary
       become: false
       unarchive:
         src: "/tmp/promtail-{{ promtail_version }}.linux-{{ go_arch }}.zip"
@@ -76,7 +78,7 @@
       delegate_to: localhost
       check_mode: false      
 
-    - name: propagate official promtail binary
+    - name: promtail | propagate official promtail binary
       copy:
         src: "/tmp/promtail-linux-{{ go_arch }}"
         dest: "{{ _promtail_binary_install_dir }}/promtail"
@@ -88,7 +90,7 @@
         - restart promtail
         
 
-- name: configure promtail
+- name: promtail | configure promtail
   copy:
     src: "{{ promtail_config_file }}"
     dest: "{{ promtail_config_dir }}/promtail-config.yml"
@@ -100,7 +102,7 @@
     - reload promtail
 
 
-- name: create systemd service units
+- name: promtail | create systemd service units
   template:
     src: promtail.service.j2
     dest: /etc/systemd/system/promtail.service

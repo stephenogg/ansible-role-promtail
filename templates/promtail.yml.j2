@@ -1,0 +1,22 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+{{ ansible_managed | comment }}
+# https://grafana.com/docs/loki/latest/clients/promtail/configuration/
+
+
+
+server:
+  http_listen_port: {{ server_http_listen_port }}
+  grpc_listen_port: {{ server_grpc_listen_port }}
+
+positions:
+  filename: {{ positions_file }}
+
+clients:
+  - url: {{ loki_client_url }}
+
+scrape_configs:
+{{ loki_scrape_configs | to_nice_yaml(indent=2) | indent(2,False) }}
+
+{% if loki_extra_scrape_configs != [] %}
+{{ loki_extra_scrape_configs | to_nice_yaml(indent=2) | indent(2,False) }}
+{% endif %}
