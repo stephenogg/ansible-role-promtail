@@ -12,7 +12,7 @@ Environment="GOMAXPROCS={{ ansible_processor_vcpus|default(ansible_processor_cou
 User=loki
 Group=loki
 ExecReload=/bin/kill -HUP $MAINPID
-ExecStart={{ _loki_binary_install_dir }}/promtail \
+ExecStart={{ _promtail_binary_install_dir }}/promtail \
   -config.file={{ promtail_config_dir }}/promtail-config.yml
 
 CapabilityBoundingSet=CAP_SET_UID
@@ -27,19 +27,19 @@ RemoveIPC=true
 RestrictSUIDSGID=true
 #SystemCallFilter=@signal @timer
 
-{% if loki_systemd_version | int >= 231 %}
-ReadWritePaths={{ loki_db_dir }}
-{% for path in loki_read_only_dirs %}
+{% if promtail_systemd_version | int >= 231 %}
+ReadWritePaths={{ promtail_db_dir }}
+{% for path in promtail_read_only_dirs %}
 ReadOnlyPaths={{ path }}
 {% endfor %}
 {% else %}
-ReadWriteDirectories={{ loki_db_dir }}
-{% for path in loki_read_only_dirs %}
+ReadWriteDirectories={{ promtail_db_dir }}
+{% for path in promtail_read_only_dirs %}
 ReadOnlyDirectories={{ path }}
 {% endfor %}
 {% endif %}
 
-{% if loki_systemd_version | int >= 232 %}
+{% if promtail_systemd_version | int >= 232 %}
 PrivateUsers=true
 ProtectControlGroups=true
 ProtectKernelModules=true
@@ -53,7 +53,7 @@ ProtectSystem=full
 Environment="HTTP_PROXY={{ http_proxy }}"{% if https_proxy is defined %} "HTTPS_PROXY={{ https_proxy }}{% endif %}"
 {% endif %}
 
-SyslogIdentifier=loki
+SyslogIdentifier=promtail
 Restart=always
 
 [Install]

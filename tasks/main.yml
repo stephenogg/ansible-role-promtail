@@ -31,6 +31,15 @@
     groups: adm, systemd-journal
     append: true
     createhome: false
+ 
+- name: create promtail data directory
+  file:
+    path: "{{ promtail_db_dir }}"
+    state: directory
+    owner: promtail
+    group: promtail
+    mode: 0755
+    
     
 - name: promtail | create promtail configuration directory
   file:
