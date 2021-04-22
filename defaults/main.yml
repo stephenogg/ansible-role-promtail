@@ -11,7 +11,7 @@ promtail_config_file: templates/promtail.yml.j2
 server_http_listen_port: 9080
 server_grpc_listen_port: 0
 
-postitions_file: "/tmp/positions.yml"
+positions_file: "/tmp/positions.yml"
 
 loki_host: localhost
 loki_client_url: "http://{{ loki_host }}:3100/loki/api/v1/push"
