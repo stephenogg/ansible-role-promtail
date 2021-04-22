@@ -2,7 +2,7 @@
 
 promtail_version: 2.2.1
 promtail_config_dir: /etc/promtail
-promtail_config_file: templates/promtail.yml,j2
+promtail_config_file: templates/promtail.yml.j2
 
 
 #defaults for the config file
