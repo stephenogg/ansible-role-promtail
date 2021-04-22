@@ -91,7 +91,7 @@
         
 
 - name: promtail | configure promtail
-  copy:
+  template:
     src: "{{ promtail_config_file }}"
     dest: "{{ promtail_config_dir }}/promtail-config.yml"
     force: true

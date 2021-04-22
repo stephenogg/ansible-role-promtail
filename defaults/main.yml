@@ -30,7 +30,8 @@ loki_scrape_configs:
       labels:
         job: varlogs
         __path__: /var/log/*log
-  - job_name: journal
+        
+  - job_name: "journal"
     journal:
       max_age: 12h
       labels:
@@ -38,6 +39,7 @@ loki_scrape_configs:
     relabel_configs:
       - source_labels: ['__journal__systemd_unit']
         target_label: 'unit'
+
 
 
 loki_extra_scrape_configs: []
