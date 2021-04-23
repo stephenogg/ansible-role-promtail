@@ -9,8 +9,8 @@ After=local-fs.target
 [Service]
 Type=simple
 Environment="GOMAXPROCS={{ ansible_processor_vcpus|default(ansible_processor_count) }}"
-User=loki
-Group=loki
+User=promtail
+Group=promtail
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStart={{ _promtail_binary_install_dir }}/promtail \
   -config.file={{ promtail_config_dir }}/promtail-config.yml
