@@ -33,7 +33,7 @@ omero_scrape_configs:
         - localhost
       labels:
         job: varlogs
-        host: {{ ansible_nodename }}
+        host: "{{ ansible_nodename }}"
         __path__: /var/log/*log
         
   - job_name: "journal"
@@ -41,7 +41,7 @@ omero_scrape_configs:
       max_age: 12h
       labels:
         job: systemd-journal
-        host: {{ ansible_nodename }}
+        host: "{{ ansible_nodename }}"
     relabel_configs:
       - source_labels: ['__journal__systemd_unit']
         target_label: 'unit'
@@ -76,7 +76,7 @@ omero_scrape_configs:
         - localhost
       labels:
         job: omeroweblogs
-        host: {{ ansible_nodename }}
+        host: "{{ ansible_nodename }}"
         __path__: /opt/omero/web/OMERO.web/var/log/*.log
         
   - job_name: "postgres"
@@ -86,7 +86,7 @@ omero_scrape_configs:
         - localhost
       labels:
         job: postgreslogs
-        host: {{ ansible_nodename }}
+        host: "{{ ansible_nodename }}"
         __path__: /var/log/postgresql/*.log              
 
 
@@ -104,7 +104,7 @@ non_omero_scrape_configs:
         - localhost
       labels:
         job: varlogs
-        host: {{ ansible_nodename }}
+        host: "{{ ansible_nodename }}"
         __path__: /var/log/*log
         
   - job_name: "journal"
@@ -112,7 +112,7 @@ non_omero_scrape_configs:
       max_age: 12h
       labels:
         job: systemd-journal
-        host: {{ ansible_nodename }}
+        host: "{{ ansible_nodename }}"
     relabel_configs:
       - source_labels: ['__journal__systemd_unit']
         target_label: 'unit'
