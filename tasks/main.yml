@@ -97,7 +97,19 @@
 
       notify:
         - restart promtail
-        
+
+- name: promtail | define scrape_config when node is hosting omero
+  set_fact:
+    scrape_config: "{{ omero_scrape_config }}"
+    omero_node: true
+  when: "( {{ ansible_nodename }} == 'omero' ) or  ( {{ ansible_nodename }} == 'national-omero' ) or ( {{ ansible_nodename }} == 'omero-dev' )"      
+
+- name: promtail | define scrape_config when node isn't hosting omero
+  set_fact:
+    scrape_config: "{{ non_omero_scrape_config }}"
+    omero_node: false
+  when: "( {{ ansible_nodename }} == 'grafana' ) or  ( {{ ansible_nodename }} == 'omero-backup' )"      
+
 
 - name: promtail | configure promtail
   template:
