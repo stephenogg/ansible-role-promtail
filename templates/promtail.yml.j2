@@ -16,7 +16,15 @@ clients:
 
 scrape_configs:
 {{ scrape_configs | to_nice_yaml(indent=2) | indent(2,False) }}          
-        
+ 
+{% if scrapes == omero %} 
+{{ omero_scrape_configs | to_nice_yaml(indent=2) | indent(2,False) }}
+{% endif %}
+
+{% if scrapes == non_omero %} 
+{{ non_omero_scrape_configs | to_nice_yaml(indent=2) | indent(2,False) }}
+{% endif %}
+    
 {% if extra_scrape_configs != [] %}
 {{ extra_scrape_configs | to_nice_yaml(indent=2) | indent(2,False) }}
 {% endif %}
