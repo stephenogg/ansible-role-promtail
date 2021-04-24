@@ -16,7 +16,7 @@ positions_file: "/tmp/positions.yml"
 
 loki_host: localhost
 loki_client_url: "http://{{ loki_host }}:3100/loki/api/v1/push"
-omero_node: false
+
 scrape_configs: []
 
 omero_scrape_configs:
