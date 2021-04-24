@@ -56,7 +56,7 @@ omero_scrape_configs:
         - localhost
       labels:
         job: nginx
-        host: {{ ansible_nodename }}
+        host: "{{ ansible_nodename }}"
         __path__: /var/log/nginx/*access.log
                   
   - job_name: "omero-server"
