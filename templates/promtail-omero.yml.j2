@@ -40,3 +40,47 @@ scrape_configs:
     relabel_configs:
       - source_labels: ['__journal__systemd_unit']
         target_label: 'unit'
+
+
+  - job_name: "nginx"
+	pipeline_stages:
+	- replace:
+		expression: '(?:[0-9]{1,3}\.){3}([0-9]{1,3})'
+		replace: '***'
+	static_configs:
+	- targets:
+		- localhost
+	  labels:
+		job: nginx
+		host: {{ ansible_nodename }}
+		__path__: /var/log/nginx/*access.log
+		  
+  - job_name: "omero-server"
+	pipeline_stages:
+	static_configs:
+	- targets:
+		- localhost
+	  labels:
+		job: omeroserverlogs
+		host: {{ ansible_nodename }}
+		__path__: /opt/omero/server/OMERO.server/var/log/*.log
+
+  - job_name: "omero-web"
+	pipeline_stages:
+	static_configs:
+	- targets:
+		- localhost
+	  labels:
+		job: omeroweblogs
+		host: {{ ansible_nodename }}
+		__path__: /opt/omero/web/OMERO.web/var/log/*.log
+
+  - job_name: "postgres"
+	pipeline_stages:
+	static_configs:
+	- targets:
+		- localhost
+	  labels:
+		job: postgreslogs
+		host: {{ ansible_nodename }}
+		__path__: /var/log/postgresql/*.log                 

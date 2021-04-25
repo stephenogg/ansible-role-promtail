@@ -9,10 +9,27 @@ clients:
   - url: "http://{{ loki_url }}:3100/loki/api/v1/push"
 
 scrape_configs:
-- job_name: system
-  static_configs:
-  - targets:
-      - localhost
-    labels:
-      job: varlogs
-      __path__: /var/log/*log
+  - job_name: "system"
+    static_configs:
+    
+    # Configures the discovery to look on the current machine.
+    # This is required by the prometheus service discovery code but doesn't
+    # really apply to Promtail which can ONLY look at files on the local machine
+    # As such it should only have the value of localhost, OR it can be excluded
+    # entirely and a default value of localhost will be applied by Promtail.
+    - targets:
+        - localhost
+      labels:
+        job: varlogs
+        host: "{{ ansible_nodename }}"
+        __path__: /var/log/*log
+        
+  - job_name: "journal"
+    journal:
+      max_age: 12h
+      labels:
+        job: systemd-journal
+        host: "{{ ansible_nodename }}"
+    relabel_configs:
+      - source_labels: ['__journal__systemd_unit']
+        target_label: 'unit'
